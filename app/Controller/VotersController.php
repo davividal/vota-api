@@ -2,19 +2,21 @@
 
 namespace Controller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class VotersController extends BaseController
 {
     public function index()
     {
         $repo = $this->getRepository('Eleitor');
-        return $repo->findAll();
+        return new JsonResponse($repo->findAll());
     }
 
-    public function login(Request $request)
+    public function login()
     {
-        $data = json_decode($request->getContent());
+        $data = json_decode($this->request->getContent());
 
         $titulo = $data->titulo;
         $senha = $data->senha;
@@ -25,21 +27,27 @@ class VotersController extends BaseController
         $eleitor = $repo->find($titulo);
 
         if ($eleitor->senhaValida($senha)) {
-            return 'Login correto';
+            $code = 200;
         } else {
-            return 'Login incorreto';
+            $code = 401;
         }
+
+        return new JsonResponse(null, $code);
     }
 
-    public function register(Request $request)
+    public function register()
     {
-        $titulo = $request->get('titulo');
-        $senha = $request->get('senha');
+        $titulo = $this->request->get('titulo');
+        $senha = $this->request->get('senha');
 
         if ($this->getRepository('Eleitor')->register($titulo, $senha)) {
-            return 'Eleitor cadastrado';
+            $return = $this->getRepository('Eleitor')->find($titulo);
+            $code = 201;
         } else {
-            return 'Erro ao cadastrar eleitor';
+            $return = new \Domain\Model\Eleitor(null, null);
+            $code = 422;
         }
+
+        return new JsonResponse($return, $code);
     }
 }

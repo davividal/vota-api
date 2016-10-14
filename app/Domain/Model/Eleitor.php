@@ -2,7 +2,7 @@
 
 namespace Domain\Model;
 
-class Eleitor
+class Eleitor implements \JsonSerializable
 {
     private $id;
 
@@ -29,5 +29,10 @@ class Eleitor
     public function getSenhaCriptografada()
     {
         return $this->senha;
+    }
+
+    public function jsonSerialize()
+    {
+        return [$this->titulo];
     }
 }

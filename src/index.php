@@ -7,30 +7,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 $app = new Silex\Application();
 
-$app->register(new Silex\Provider\VarDumperServiceProvider(), [
-    'var_dumper.dump_destination' => __DIR__ . '/../logs/development.log',
-]);
+$app->register(new Silex\Provider\VarDumperServiceProvider());
+$app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new Silex\Provider\MonologServiceProvider(), [
     'monolog.logfile' => __DIR__.'/../logs/development.log',
 ]);
 
+$app['voters.controller'] = function() use ($app) {
+    $request = $app['request_stack']->getCurrentRequest();
+    return new Controller\VotersController($app, $request);
+};
 
-$app->get('/voters', function (Request $request) use ($app) {
-    $controller = new Controller\VotersController($app);
-    return new Response(json_encode($controller->index()));
-});
+$app->post('/api/login', 'voters.controller:login');
+$app->post('/api/register-voter', 'voters.controller:register');
 
-$app->post('/api/register-voter', function (Request $request) use ($app) {
-    $controller = new Controller\VotersController($app);
-    $msg = $controller->register($request);
-    return new Response(json_encode(['message' => $msg]));
-});
-
-$app->post('/api/login', function (Request $request) use ($app) {
-    $controller = new Controller\VotersController($app);
-    $msg = $controller->login($request, $app);
-    $app['monolog']->addDebug('Login: ' . $msg);
-    return new Response(json_encode(['message' => $msg]));
-});
+$app->get('/voters', 'voters.controller:index');
 
 $app->run();
