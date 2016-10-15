@@ -2,7 +2,6 @@
 
 namespace Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,7 +10,7 @@ class VotersController extends BaseController
     public function index()
     {
         $repo = $this->getRepository('Eleitor');
-        return new JsonResponse($repo->findAll());
+        return $this->response($repo->findAll());
     }
 
     public function login()
@@ -32,7 +31,7 @@ class VotersController extends BaseController
             $code = 401;
         }
 
-        return new JsonResponse(null, $code);
+        return $this->response(null, $code);
     }
 
     public function register()
@@ -48,6 +47,6 @@ class VotersController extends BaseController
             $code = 422;
         }
 
-        return new JsonResponse($return, $code);
+        return $this->response($return, $code);
     }
 }

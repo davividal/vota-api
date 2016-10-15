@@ -4,6 +4,7 @@ namespace Controller;
 
 use Domain\Infrastructure\Database;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class BaseController
 {
@@ -23,5 +24,15 @@ class BaseController
     {
         $repository = sprintf('Domain\Repository\%s', $repository);
         return new $repository($this->database);
+    }
+
+    /*
+     * @param $data mixed The data that should be returned
+     * @param $code integer The HTTP status code
+     * @return JsonResponse
+     **/
+    public function response($data, $code = 200)
+    {
+        return new JsonResponse($data, $code);
     }
 }
