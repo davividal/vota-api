@@ -64,4 +64,13 @@ class Eleitor extends BaseRepository
             return false;
         }
     }
+
+    public function registrarVoto($titulo)
+    {
+        $sql = "UPDATE eleitores SET votou = true WHERE titulo = ? AND votou = false";
+
+        $result = $this->db->executeUpdate($sql, [$titulo]);
+
+        return $result;
+    }
 }

@@ -31,8 +31,8 @@ class BaseController
      * @param $code integer The HTTP status code
      * @return JsonResponse
      **/
-    public function response($data, $code = 200)
+    public function response($data, $code = 200, array $headers = [])
     {
-        return new JsonResponse($data, $code);
+        return new JsonResponse($data, $code, $headers);
     }
 }

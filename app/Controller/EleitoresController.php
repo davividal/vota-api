@@ -5,7 +5,7 @@ namespace Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class VotersController extends BaseController
+class EleitoresController extends BaseController
 {
     public function index()
     {

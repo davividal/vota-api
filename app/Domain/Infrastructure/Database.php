@@ -21,52 +21,34 @@ class Database
 
     private function __construct($app)
     {
-        $app->register(new DoctrineServiceProvider(), $this->dbSettings());
+        $app->register(
+            new DoctrineServiceProvider(),
+            ['db.options' => $this->dbSettings()]
+        );
 
         $this->conn = $app['db'];
     }
 
     private function dbSettings()
     {
-        $this->production = !!getenv('OPENSHIFT_POSTGRESQL_DB_HOST');
+        $this->production = !!getenv('VCAP_SERVICES');
 
-        return [
-            'db.options' => [
-                'driver' => self::DRIVER,
-                'host' => getenv('OPENSHIFT_POSTGRESQL_DB_HOST') ?: self::HOST,
-                'port' => getenv('$OPENSHIFT_POSTGRESQL_DB_PORT') ?: self::PORT,
-                'user' => $this->getUser(),
-                'password' => $this->getPassword(),
-                'dbname' => $this->getDB()
-            ]
-        ];
-    }
-
-    private function getUser()
-    {
         if ($this->production) {
-            return 'adminwyyxeve';
+            $data = json_decode(getenv('VCAP_SERVICES'));
+            $services = current($data->elephantsql);
+            $url = $services->credentials->uri;
+        } else {
+            $url = sprintf(
+                'postgresql://%s:%s@%s:%d/%s',
+                self::USERNAME,
+                self::PASSWORD,
+                self::HOST,
+                self::PORT,
+                self::DATABASE
+            );
         }
 
-        return self::USERNAME;
-    }
-
-    private function getPassword()
-    {
-        if ($this->production) {
-            return 'IbAEj7C_Lsrd';
-        }
-
-        return self::PASSWORD;
-    }
-
-    private function getDB()
-    {
-        if ($this->production) {
-            return 'vota';
-        }
-
-        return self::DATABASE;
+        return ['url' => $url];
     }
 
     public static function getInstance($app)
