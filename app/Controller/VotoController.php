@@ -18,9 +18,12 @@ class VotoController extends BaseController
         /** @var Domain\Model\Eleitor $eleitor */
         $votoEleitor = $eleitorRepo->registrarVoto($titulo);
 
+        $response = new \stdClass;
+
         if (!$votoEleitor) {
+            $response->message = "Eleitor já votou";
             return $this->response(
-                ["Eleitor já votou"],
+                $response,
                 429,
                 ['Retry-After' => 4 * 365 * 86400]
             );
@@ -34,10 +37,31 @@ class VotoController extends BaseController
 
         if ($votoVereador && $votoPrefeito) {
             $eleitorRepo->commit();
-            return $this->response(["Voto computado com sucesso"], 200);
+            $response->message = "Voto computado com sucesso";
+
+            return $this->response(
+                $response,
+                200
+            );
         } else {
             $eleitorRepo->rollBack();
-            return $this->response(["Erro ao votar"], 422);
+            $response->message = "Erro ao votar";
+            return $this->response(
+                $response,
+                422
+            );
         }
+    }
+
+    public function resultadoPrefeito()
+    {
+    }
+
+    public function resultadoVereador()
+    {
+    }
+
+    public function resultadoCandidato()
+    {
     }
 }

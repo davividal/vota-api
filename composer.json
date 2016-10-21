@@ -1,8 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "Domain\\": "app/Domain",
-            "Controller\\": "app/Controller"
+            "Domain\\": "htdocs/app/Domain",
+            "Controller\\": "htdocs/app/Controller"
         }
     },
     "require": {
