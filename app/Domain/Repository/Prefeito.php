@@ -2,8 +2,50 @@
 
 namespace Domain\Repository;
 
+use Domain\Model\Prefeito as PrefeitoModel;
+
 class Prefeito extends BaseRepository
 {
+    public function findAll()
+    {
+        $url = 'https://dl.dropboxusercontent.com/u/40990541/prefeito.json';
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = json_decode(curl_exec($ch))['prefeito'];
+
+        $prefeitos = [];
+        foreach ($data as $prefeito) {
+            $id = $data->id;
+            $nome = $data->nome;
+            $partido = $data->partido;
+            $foto = $data->foto;
+            $prefeitos[$id] = new PrefeitoModel($id, $nome, $partido, $foto);
+        }
+
+        return $prefeitos;
+    }
+
+    public function resultadoPrefeitos()
+    {
+        $sql = "SELECT prefeito_id, COUNT(*) AS votos FROM votos_prefeitos GROUP BY prefeito_id";
+        $data = $this->db->fetchAll($sql);
+
+        $prefeitos = $this->findAll();
+
+        $votos = [];
+        foreach ($data as $rawVoto) {
+            $id = $rawVoto['prefeito_id'];
+            $votos = $rawVoto['votos'];
+
+            $prefeitos[$id]->setVotos($votos);
+
+            $votos[] = $prefeitos[$id];
+        }
+
+        return $votos;
+    }
+
     public function registrarVoto($prefeito)
     {
         $sql = "INSERT INTO votos_prefeitos(prefeito_id) VALUES (?);";

@@ -53,15 +53,15 @@ class VotoController extends BaseController
         }
     }
 
-    public function resultadoPrefeito()
+    public function resultadoPrefeitos()
     {
+        $repo = $this->getRepository('Prefeito');
+        return $this->response($repo->resultadoPrefeitos());
     }
 
-    public function resultadoVereador()
+    public function resultadoVereadores()
     {
-    }
-
-    public function resultadoCandidato()
-    {
+        $repo = $this->getRepository('Vereador');
+        return $this->response($repo->resultadoVereadores());
     }
 }

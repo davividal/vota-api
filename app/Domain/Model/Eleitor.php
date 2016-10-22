@@ -33,6 +33,6 @@ class Eleitor implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return [$this->titulo];
+        return ['titulo' => $this->titulo];
     }
 }
