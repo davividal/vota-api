@@ -2,7 +2,7 @@
 
 namespace Domain\Repository;
 
-use Domain\Model\Vereador;
+use Domain\Model\Vereador as VereadorModel;
 
 class Vereador extends BaseRepository
 {
@@ -15,11 +15,11 @@ class Vereador extends BaseRepository
         $data = json_decode(curl_exec($ch))['vereador'];
 
         $vereadores = [];
-        foreach ($data as $vereadore) {
-            $id = $data->id;
-            $nome = $data->nome;
-            $partido = $data->partido;
-            $foto = $data->foto;
+        foreach ($data as $vereador) {
+            $id = $vereador->id;
+            $nome = $vereador->nome;
+            $partido = $vereador->partido;
+            $foto = $vereador->foto;
             $vereadores[$id] = new VereadorModel($id, $nome, $partido, $foto);
         }
 
@@ -28,7 +28,7 @@ class Vereador extends BaseRepository
 
     public function resultadoVereadores()
     {
-        $sql = "SELECT vereador_id, COUNT(*) AS votos FROM votos_vereadores GROUP BY vereador_id";
+        $sql = 'SELECT vereador_id, COUNT(*) AS votos FROM votos_vereadores GROUP BY vereador_id';
         $data = $this->db->fetchAll($sql);
 
         $vereadores = $this->findAll();
@@ -48,7 +48,7 @@ class Vereador extends BaseRepository
 
     public function registrarVoto($vereador)
     {
-        $sql = "INSERT INTO votos_vereadores(vereador_id) VALUES (?);";
+        $sql = 'INSERT INTO votos_vereadores(vereador_id) VALUES (?);';
 
         $result = $this->db->executeUpdate($sql, [$vereador]);
 

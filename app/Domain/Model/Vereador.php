@@ -30,7 +30,7 @@ class Vereador implements \JsonSerializable
             'nome' => $this->nome,
             'partido' => $this->partido,
             'foto' => $this->foto,
-            'votos' => $this->votos
+            'votos' => $this->votos,
         ];
     }
 }

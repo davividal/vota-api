@@ -9,7 +9,7 @@ class Eleitor extends BaseRepository
 {
     public function findAll()
     {
-        $sql = "SELECT titulo, senha FROM eleitores";
+        $sql = 'SELECT titulo, senha FROM eleitores';
         $data = $this->db->fetchAll($sql);
 
         $eleitores = [];
@@ -25,7 +25,7 @@ class Eleitor extends BaseRepository
 
     public function find($titulo)
     {
-        $sql = "SELECT titulo, senha FROM eleitores WHERE titulo = ?";
+        $sql = 'SELECT titulo, senha FROM eleitores WHERE titulo = ?';
         $data = $this->db->fetchAll($sql, [$titulo]);
 
         if (1 !== count($data)) {
@@ -46,28 +46,31 @@ class Eleitor extends BaseRepository
 
         $this->db->beginTransaction();
 
-        $sql = "INSERT INTO eleitores(titulo, senha) VALUES (?, ?)";
+        $sql = 'INSERT INTO eleitores(titulo, senha) VALUES (?, ?)';
 
         try {
             $result = $this->db->executeUpdate($sql, [$titulo, $senha]);
         } catch (UniqueConstraintViolationException $e) {
             // TODO: log
             $this->db->rollBack();
+
             return false;
         }
 
         if (1 === $result) {
             $this->db->commit();
+
             return true;
         } else {
             $this->db->rollBack();
+
             return false;
         }
     }
 
     public function registrarVoto($titulo)
     {
-        $sql = "UPDATE eleitores SET votou = true WHERE titulo = ? AND votou = false";
+        $sql = 'UPDATE eleitores SET votou = true WHERE titulo = ? AND votou = false';
 
         $result = $this->db->executeUpdate($sql, [$titulo]);
 

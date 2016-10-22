@@ -16,10 +16,10 @@ class Prefeito extends BaseRepository
 
         $prefeitos = [];
         foreach ($data as $prefeito) {
-            $id = $data->id;
-            $nome = $data->nome;
-            $partido = $data->partido;
-            $foto = $data->foto;
+            $id = $prefeito->id;
+            $nome = $prefeito->nome;
+            $partido = $prefeito->partido;
+            $foto = $prefeito->foto;
             $prefeitos[$id] = new PrefeitoModel($id, $nome, $partido, $foto);
         }
 
@@ -28,7 +28,7 @@ class Prefeito extends BaseRepository
 
     public function resultadoPrefeitos()
     {
-        $sql = "SELECT prefeito_id, COUNT(*) AS votos FROM votos_prefeitos GROUP BY prefeito_id";
+        $sql = 'SELECT prefeito_id, COUNT(*) AS votos FROM votos_prefeitos GROUP BY prefeito_id';
         $data = $this->db->fetchAll($sql);
 
         $prefeitos = $this->findAll();
@@ -48,7 +48,7 @@ class Prefeito extends BaseRepository
 
     public function registrarVoto($prefeito)
     {
-        $sql = "INSERT INTO votos_prefeitos(prefeito_id) VALUES (?);";
+        $sql = 'INSERT INTO votos_prefeitos(prefeito_id) VALUES (?);';
 
         $result = $this->db->executeUpdate($sql, [$prefeito]);
 

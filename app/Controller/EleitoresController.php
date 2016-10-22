@@ -2,8 +2,8 @@
 
 namespace Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Domain\Model\Eleitor;
+
 
 class EleitoresController extends BaseController
 {
@@ -23,7 +23,7 @@ class EleitoresController extends BaseController
 
         $repo = $this->getRepository('Eleitor');
 
-        /** @var Domain\Model\Eleitor $eleitor */
+        /** @var Eleitor $eleitor */
         $eleitor = $repo->find($titulo);
 
         if ($eleitor->senhaValida($senha)) {
@@ -44,7 +44,7 @@ class EleitoresController extends BaseController
             $return = $this->getRepository('Eleitor')->find($titulo);
             $code = 201;
         } else {
-            $return = new \Domain\Model\Eleitor(null, null);
+            $return = new Eleitor(null, null);
             $code = 422;
         }
 

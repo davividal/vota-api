@@ -2,6 +2,8 @@
 
 namespace Controller;
 
+use Domain\Model\Eleitor;
+
 class VotoController extends BaseController
 {
     public function votar()
@@ -15,7 +17,7 @@ class VotoController extends BaseController
         $eleitorRepo = $this->getRepository('Eleitor');
         $eleitorRepo->beginTransaction();
 
-        /** @var Domain\Model\Eleitor $eleitor */
+        /** @var Eleitor $eleitor */
         $votoEleitor = $eleitorRepo->registrarVoto($titulo);
 
         $response = new \stdClass;

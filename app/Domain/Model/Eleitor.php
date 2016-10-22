@@ -4,8 +4,6 @@ namespace Domain\Model;
 
 class Eleitor implements \JsonSerializable
 {
-    private $id;
-
     private $titulo;
 
     private $senha;
