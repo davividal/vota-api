@@ -2,6 +2,7 @@
 
 namespace Domain\Infrastructure;
 
+use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
 
 class Database
@@ -19,7 +20,7 @@ class Database
 
     private static $instance;
 
-    private function __construct($app)
+    private function __construct(Application $app)
     {
         $app->register(
             new DoctrineServiceProvider(),

@@ -22,6 +22,7 @@ class VotoController extends BaseController
 
         if (!$votoEleitor) {
             $response->message = "Eleitor já votou";
+
             return $this->response(
                 $response,
                 429,
@@ -46,6 +47,7 @@ class VotoController extends BaseController
         } else {
             $eleitorRepo->rollBack();
             $response->message = "Erro ao votar";
+
             return $this->response(
                 $response,
                 422
@@ -56,12 +58,14 @@ class VotoController extends BaseController
     public function resultadoPrefeitos()
     {
         $repo = $this->getRepository('Prefeito');
+
         return $this->response($repo->resultadoPrefeitos());
     }
 
     public function resultadoVereadores()
     {
         $repo = $this->getRepository('Vereador');
+
         return $this->response($repo->resultadoVereadores());
     }
 }

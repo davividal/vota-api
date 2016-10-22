@@ -10,6 +10,7 @@ class EleitoresController extends BaseController
     public function index()
     {
         $repo = $this->getRepository('Eleitor');
+
         return $this->response($repo->findAll());
     }
 

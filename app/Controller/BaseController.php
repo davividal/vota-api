@@ -23,6 +23,7 @@ class BaseController
     public function getRepository($repository)
     {
         $repository = sprintf('Domain\Repository\%s', $repository);
+
         return new $repository($this->database);
     }
 
