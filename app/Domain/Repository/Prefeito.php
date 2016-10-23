@@ -12,14 +12,15 @@ class Prefeito extends BaseRepository
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = json_decode(curl_exec($ch))['prefeito'];
+        $data = json_decode(curl_exec($ch));
 
         $prefeitos = [];
-        foreach ($data as $prefeito) {
+        foreach ($data->prefeito as $prefeito) {
             $id = $prefeito->id;
             $nome = $prefeito->nome;
             $partido = $prefeito->partido;
             $foto = $prefeito->foto;
+
             $prefeitos[$id] = new PrefeitoModel($id, $nome, $partido, $foto);
         }
 
@@ -33,17 +34,14 @@ class Prefeito extends BaseRepository
 
         $prefeitos = $this->findAll();
 
-        $votos = [];
         foreach ($data as $rawVoto) {
             $id = $rawVoto['prefeito_id'];
             $votos = $rawVoto['votos'];
 
             $prefeitos[$id]->setVotos($votos);
-
-            $votos[] = $prefeitos[$id];
         }
 
-        return $votos;
+        return $prefeitos;
     }
 
     public function registrarVoto($prefeito)

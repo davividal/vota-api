@@ -12,10 +12,10 @@ class Vereador extends BaseRepository
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = json_decode(curl_exec($ch))['vereador'];
+        $data = json_decode(curl_exec($ch));
 
         $vereadores = [];
-        foreach ($data as $vereador) {
+        foreach ($data->vereador as $vereador) {
             $id = $vereador->id;
             $nome = $vereador->nome;
             $partido = $vereador->partido;
@@ -33,17 +33,14 @@ class Vereador extends BaseRepository
 
         $vereadores = $this->findAll();
 
-        $votos = [];
         foreach ($data as $rawVoto) {
             $id = $rawVoto['vereador_id'];
             $votos = $rawVoto['votos'];
 
             $vereadores[$id]->setVotos($votos);
-
-            $votos[] = $vereadores[$id];
         }
 
-        return $votos;
+        return $vereadores;
     }
 
     public function registrarVoto($vereador)
