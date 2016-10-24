@@ -3,6 +3,8 @@
 namespace Controller;
 
 use Domain\Model\Eleitor;
+use Domain\Repository\Prefeito;
+use Domain\Repository\Vereador;
 
 class VotoController extends BaseController
 {
@@ -57,17 +59,32 @@ class VotoController extends BaseController
         }
     }
 
-    public function resultadoPrefeitos()
+    public function resultadoPrefeitos($prefeitoId)
     {
+        /** @var Prefeito $repo */
         $repo = $this->getRepository('Prefeito');
 
-        return $this->response($repo->resultadoPrefeitos());
+        if ($prefeitoId) {
+            return $this->response($repo->resultadoPrefeito($prefeitoId));
+        } else {
+            return $this->response($repo->resultadoPrefeitos());
+        }
     }
 
-    public function resultadoVereadores()
+    public function resultadoVereadores($vereadorId)
     {
+        /** @var Vereador $repo */
         $repo = $this->getRepository('Vereador');
 
-        return $this->response($repo->resultadoVereadores());
+        if ($vereadorId) {
+            return $this->response($repo->resultadoVereador($vereadorId));
+        } else {
+            return $this->response($repo->resultadoVereadores());
+        }
+    }
+
+    public function novaEleicao()
+    {
+        //
     }
 }

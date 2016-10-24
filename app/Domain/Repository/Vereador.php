@@ -6,6 +6,9 @@ use Domain\Model\Vereador as VereadorModel;
 
 class Vereador extends BaseRepository
 {
+    /**
+     * @return \Domain\Model\Vereador[]
+     */
     public function findAll()
     {
         $url = 'https://dl.dropboxusercontent.com/u/40990541/vereador.json';
@@ -54,5 +57,16 @@ class Vereador extends BaseRepository
         } else {
             return false;
         }
+    }
+
+    public function resultadoVereador($vereadorId)
+    {
+        $sql = 'SELECT COUNT(*) AS votos FROM votos_vereadores WHERE vereador_id = ?';
+        $data = $this->db->fetchAll($sql, [$vereadorId]);
+
+        $vereador = $this->findAll()[$vereadorId];
+        $vereador->setVotos($data[0]['votos']);
+
+        return $vereador;
     }
 }

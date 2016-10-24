@@ -6,6 +6,9 @@ use Domain\Model\Prefeito as PrefeitoModel;
 
 class Prefeito extends BaseRepository
 {
+    /**
+     * @return \Domain\Model\Prefeito[]
+     */
     public function findAll()
     {
         $url = 'https://dl.dropboxusercontent.com/u/40990541/prefeito.json';
@@ -55,5 +58,16 @@ class Prefeito extends BaseRepository
         } else {
             return false;
         }
+    }
+
+    public function resultadoPrefeito($prefeitoId)
+    {
+        $sql = 'SELECT COUNT(*) AS votos FROM votos_prefeitos WHERE prefeito_id = ?';
+        $data = $this->db->fetchAll($sql, [$prefeitoId]);
+
+        $prefeito = $this->findAll()[$prefeitoId];
+        $prefeito->setVotos($data[0]['votos']);
+
+        return $prefeito;
     }
 }

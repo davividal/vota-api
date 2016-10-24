@@ -31,8 +31,14 @@ $app->post('/api/login', 'eleitores.controller:login');
 $app->post('/api/register-voter', 'eleitores.controller:register');
 
 $app->post('/api/votar', 'voto.controller:votar');
-$app->get('/api/resultado-prefeitos', 'voto.controller:resultadoPrefeitos');
-$app->get('/api/resultado-vereadores', 'voto.controller:resultadoVereadores');
+$app
+    ->get('/api/resultado-prefeitos/{prefeitoId}', 'voto.controller:resultadoPrefeitos')
+    ->value('prefeitoId', null);
+$app
+    ->get('/api/resultado-vereadores/{vereadorId}', 'voto.controller:resultadoVereadores')
+    ->value('vereadorId', null);
+
+$app->post('/api/nova-eleicao', 'voto.controller:novaEleicao');
 
 $app->get('/voters', 'eleitores.controller:index')->bind('voters');
 $app->get(
