@@ -29,6 +29,7 @@ $app['voto.controller'] = function () use ($app) {
 
 $app->post('/api/login', 'eleitores.controller:login');
 $app->post('/api/register-voter', 'eleitores.controller:register');
+$app->post('/api/register-voters', 'eleitores.controller:registerBatch');
 
 $app->post('/api/votar', 'voto.controller:votar');
 $app
