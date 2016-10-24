@@ -69,4 +69,10 @@ class Vereador extends BaseRepository
 
         return $vereador;
     }
+
+    public function novaEleicao()
+    {
+        $sql = 'TRUNCATE TABLE votos_vereadores';
+        $this->db->executeUpdate($sql);
+    }
 }

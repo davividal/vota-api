@@ -70,4 +70,10 @@ class Prefeito extends BaseRepository
 
         return $prefeito;
     }
+
+    public function novaEleicao()
+    {
+        $sql = 'TRUNCATE TABLE votos_prefeitos';
+        $this->db->executeUpdate($sql);
+    }
 }

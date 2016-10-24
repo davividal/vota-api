@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Domain\Infrastructure\Database;
+use Domain\Repository\BaseRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -20,6 +21,10 @@ class BaseController
         $this->request = $request;
     }
 
+    /**
+     * @param $repository
+     * @return BaseRepository
+     */
     public function getRepository($repository)
     {
         $repository = sprintf('Domain\Repository\%s', $repository);

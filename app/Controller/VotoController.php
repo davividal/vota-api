@@ -85,6 +85,18 @@ class VotoController extends BaseController
 
     public function novaEleicao()
     {
-        //
+        /** @var \Domain\Repository\Eleitor $eleitorRepo */
+        $eleitorRepo = $this->getRepository('Eleitor');
+        $eleitorRepo->novaEleicao();
+
+        /** @var Prefeito $prefeitoRepo */
+        $prefeitoRepo = $this->getRepository('Prefeito');
+        $prefeitoRepo->novaEleicao();
+
+        /** @var Vereador $vereadorRepo */
+        $vereadorRepo = $this->getRepository('Vereador');
+        $vereadorRepo->novaEleicao();
+
+        return $this->response(null);
     }
 }

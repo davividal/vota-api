@@ -76,4 +76,10 @@ class Eleitor extends BaseRepository
 
         return $result;
     }
+
+    public function novaEleicao()
+    {
+        $sql = 'UPDATE eleitores SET votou = false WHERE votou = true';
+        $this->db->executeUpdate($sql);
+    }
 }
