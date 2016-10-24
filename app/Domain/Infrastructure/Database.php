@@ -16,8 +16,6 @@ class Database
 
     private $conn;
 
-    private $production = false;
-
     private static $instance;
 
     private function __construct(Application $app)
@@ -32,9 +30,7 @@ class Database
 
     private function dbSettings()
     {
-        $this->production = !!getenv('VCAP_SERVICES');
-
-        if ($this->production) {
+        if (PRODUCTION) {
             $data = json_decode(getenv('VCAP_SERVICES'));
             $services = current($data->elephantsql);
             $url = $services->credentials->uri;

@@ -1,8 +1,9 @@
 <?php
 
-// require_once __DIR__.'/vendor/autoload.php';
 require_once 'vendor/autoload.php';
 
+define('PRODUCTION', !!getenv('VCAP_SERVICES'));
+define('LOG', PRODUCTION ? 'production' : 'development');
 
 $app = new Silex\Application();
 
@@ -11,7 +12,7 @@ $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(
     new Silex\Provider\MonologServiceProvider(),
     [
-        'monolog.logfile' => __DIR__.'/logs/development.log',
+        'monolog.logfile' => __DIR__.'/logs/' . LOG . '.log',
     ]
 );
 
