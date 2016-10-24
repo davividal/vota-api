@@ -23,6 +23,10 @@ class Eleitor extends BaseRepository
         return $eleitores;
     }
 
+    /**
+     * @param $titulo
+     * @return \Domain\Model\Eleitor
+     */
     public function find($titulo)
     {
         $sql = 'SELECT titulo, senha FROM eleitores WHERE titulo = ?';
@@ -79,7 +83,7 @@ class Eleitor extends BaseRepository
 
     public function novaEleicao()
     {
-        $sql = 'UPDATE eleitores SET votou = false WHERE votou = true';
+        $sql = 'TRUNCATE TABLE eleitores';
         $this->db->executeUpdate($sql);
     }
 }

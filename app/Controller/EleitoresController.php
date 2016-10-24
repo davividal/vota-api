@@ -9,9 +9,10 @@ class EleitoresController extends BaseController
 {
     public function index()
     {
-        $repo = $this->getRepository('Eleitor');
+        /** @var \Domain\Repository\Eleitor $eleitorRepo */
+        $eleitorRepo = $this->getRepository('Eleitor');
 
-        return $this->response($repo->findAll());
+        return $this->response($eleitorRepo->findAll());
     }
 
     public function login()
@@ -21,10 +22,10 @@ class EleitoresController extends BaseController
         $titulo = $data->titulo;
         $senha = $data->senha;
 
-        $repo = $this->getRepository('Eleitor');
+        /** @var \Domain\Repository\Eleitor $eleitorRepo */
+        $eleitorRepo = $this->getRepository('Eleitor');
 
-        /** @var Eleitor $eleitor */
-        $eleitor = $repo->find($titulo);
+        $eleitor = $eleitorRepo->find($titulo);
 
         if ($eleitor->senhaValida($senha)) {
             $code = 200;
@@ -40,8 +41,10 @@ class EleitoresController extends BaseController
         $titulo = $this->request->get('titulo');
         $senha = $this->request->get('senha');
 
-        if ($this->getRepository('Eleitor')->register($titulo, $senha)) {
-            $return = $this->getRepository('Eleitor')->find($titulo);
+        /** @var \Domain\Repository\Eleitor $eleitorRepo */
+        $eleitorRepo = $this->getRepository('Eleitor');
+        if ($eleitorRepo->register($titulo, $senha)) {
+            $return = $eleitorRepo->find($titulo);
             $code = 201;
         } else {
             $return = new Eleitor(null, null);
@@ -49,5 +52,18 @@ class EleitoresController extends BaseController
         }
 
         return $this->response($return, $code);
+    }
+
+    public function registerBatch()
+    {
+        $eleitores = json_decode($this->request->getContent());
+
+        /** @var \Domain\Repository\Eleitor $eleitorRepo */
+        $eleitorRepo = $this->getRepository('Eleitor');
+        foreach ($eleitores as $eleitor) {
+            $eleitorRepo->register($eleitor->titulo, $eleitor->senha);
+        }
+
+        return $this->response(null, 201);
     }
 }
