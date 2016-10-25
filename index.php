@@ -2,10 +2,25 @@
 
 require_once 'vendor/autoload.php';
 
+use Symfony\Component\Debug\ErrorHandler;
+use Symfony\Component\Debug\ExceptionHandler;
+
 define('PRODUCTION', !!getenv('VCAP_SERVICES'));
 define('LOG', PRODUCTION ? 'production' : 'development');
 
 $app = new Silex\Application();
+
+$app['debug'] = !PRODUCTION;
+
+$handler_function = function ($e) use ($app) {
+    $app['monolog']->addDebug($e->getMessage());
+};
+
+ErrorHandler::register();
+$exceptionHandler = ExceptionHandler::register();
+$exceptionHandler->setHandler($handler_function);
+
+$app->error($handler_function);
 
 $app->register(new Silex\Provider\VarDumperServiceProvider());
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
