@@ -19,7 +19,7 @@ class VotoController extends BaseController
         $eleitorRepo = $this->getRepository('Eleitor');
         $eleitorRepo->beginTransaction();
 
-        /** @var Eleitor $eleitor */
+        /** @var \Domain\Repository\Eleitor $eleitor */
         $votoEleitor = $eleitorRepo->registrarVoto($titulo);
 
         $response = new \stdClass;
@@ -27,6 +27,9 @@ class VotoController extends BaseController
         if (!$votoEleitor) {
             $response->message = "Eleitor já votou";
 
+            // https://httpstatuses.com/429
+            // 4 * 365 * 86400 = 4 anos, em segundos
+            // TOO MANY REQUESTS
             return $this->response(
                 $response,
                 429,
@@ -34,9 +37,11 @@ class VotoController extends BaseController
             );
         }
 
+        /** @var Vereador $vereadorRepo */
         $vereadorRepo = $this->getRepository('Vereador');
         $votoVereador = $vereadorRepo->registrarVoto($vereador);
 
+        /** @var Prefeito $prefeitoRepo */
         $prefeitoRepo = $this->getRepository('Prefeito');
         $votoPrefeito = $prefeitoRepo->registrarVoto($prefeito);
 
@@ -44,6 +49,8 @@ class VotoController extends BaseController
             $eleitorRepo->commit();
             $response->message = "Voto computado com sucesso";
 
+            // https://httpstatuses.com/200
+            // OK
             return $this->response(
                 $response,
                 200
@@ -52,6 +59,8 @@ class VotoController extends BaseController
             $eleitorRepo->rollBack();
             $response->message = "Erro ao votar";
 
+            // https://httpstatuses.com/422
+            // UNPROCESSABLE ENTITY
             return $this->response(
                 $response,
                 422

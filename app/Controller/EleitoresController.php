@@ -28,8 +28,12 @@ class EleitoresController extends BaseController
         $eleitor = $eleitorRepo->find($titulo);
 
         if ($eleitor->senhaValida($senha)) {
+            // https://httpstatuses.com/200
+            // OK
             $code = 200;
         } else {
+            // https://httpstatuses.com/401
+            // Unauthorized
             $code = 401;
         }
 
@@ -45,9 +49,13 @@ class EleitoresController extends BaseController
         $eleitorRepo = $this->getRepository('Eleitor');
         if ($eleitorRepo->register($titulo, $senha)) {
             $return = $eleitorRepo->find($titulo);
+            // https://httpstatuses.com/201
+            // CREATED
             $code = 201;
         } else {
             $return = new Eleitor(null, null);
+            // https://httpstatuses.com/422
+            // UNPROCESSABLE ENTITY
             $code = 422;
         }
 
@@ -64,6 +72,8 @@ class EleitoresController extends BaseController
             $eleitorRepo->register($eleitor->titulo, $eleitor->senha);
         }
 
+        // https://httpstatuses.com/201
+        // CREATED
         return $this->response(null, 201);
     }
 }
